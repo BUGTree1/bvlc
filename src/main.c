@@ -3,6 +3,7 @@
 #include <vlc/vlc.h>
 
 int main(int argc, char **argv) {
+    printf("pozdro\n");
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <path-to-video>\n", argv[0]);
         return EXIT_FAILURE;

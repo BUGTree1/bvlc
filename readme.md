@@ -12,12 +12,14 @@
 
 Is a simple c libvlc video player
 
+for now compiling only works with windows mingw x64
+
 ## Dependencies
 
-[JustBuildIt](https://github.com/BUGTree1/JustBuildIt)
+[VLC SDK](https://download.videolan.org/pub/videolan/vlc)
 
 ## Quick Start
 
 ```console
-$ buildit
+$ make
 ```
