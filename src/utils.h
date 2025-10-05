@@ -1,29 +1,67 @@
+#pragma once
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <filesystem>
+#define NOB_STRIP_PREFIX
+#include "nob.h"
 
-using namespace std;
+#include <SDL.h>
 
-void error(string desc);
-void error(string desc,const char* file,int line);
-void warn(string desc);
-void warn(string desc,const char* file,int line);
-void todo(string desc,const char* file,int line);
+/* 
+ EXAMPLE:
 
-template<typename T>
-T errorz(T val,string desc){
-    if (val == 0) error(desc);
-    return val;
+ dynamic_array(char) xs = {0};
+ da_append(&xs, 'a');
+ da_append(&xs, 'b');
+ da_append(&xs, '7');
+ 
+ printf("%c\n", xs.items[0]);
+
+-----------------------------------
+
+ dynamic_array(char) xs = {0};
+ sb_append_cstr(&xs, "abcdeFG"); // YES |SB|_append_cstr
+
+ printf("%s\n", xs.items);
+*/
+#define dynamic_array(type) \
+struct {                    \
+    type* items;            \
+    int capacity;           \
+    int count;              \
 }
 
-template<typename T>
-T errornz(T val,string desc){
-    if (val != 0) error(desc);
-    return val;
-}
+#define da_contains(da, con_item) ({                                          \
+bool yes = false;                                                             \
+for (typeof(*((da)->items)) *it = (da)->items; it < (da)->items + (da)->count; ++it) { \
+    if (*it == con_item){                                                     \
+        yes = true;                                                           \
+        break;                                                                \
+    }                                                                         \
+}                                                                             \
+yes;})
 
-#endif // __UTILS_H__
+#define da_contains_cstr(da, con_item) ({                                     \
+bool yes = false;                                                             \
+for (typeof(*((da)->items)) *it = (da)->items; it < (da)->items + (da)->count; ++it) { \
+    if (strcmp(*it, con_item) == 0){                                                     \
+        yes = true;                                                           \
+        break;                                                                \
+    }                                                                         \
+}                                                                             \
+yes;})
+
+#define da_pop(popped_da) ({                                \
+    typeof(*((popped_da)->items)) val = da_last(popped_da); \
+    (popped_da)->count--;                                   \
+    val;                                                    \
+})
+
+#define da_printf(da, print_string)                                                \
+do {                                                                                       \
+    for (typeof(*((da)->items)) *it = (da)->items; it < (da)->items + (da)->count; ++it) { \
+        printf(print_string, *it);                                                         \
+    }                                                                                      \
+} while(0)
+
+#endif //__UTILS_H__

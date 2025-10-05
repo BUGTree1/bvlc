@@ -19,6 +19,10 @@ for now compiling only works with windows mingw x64 and needs libvlc dlls and pl
 [VLC SDK](https://download.videolan.org/pub/videolan/vlc)
 [BuildIt](https://github.com/BUGTree1/JustBuildIt)
 
+Included [nob.h](https://github.com/tsoding/nob.h)
+
+Thanks to Alexey Kutepov (tsoding) for nob.h!
+
 ## Quick Start
 
 ```console
