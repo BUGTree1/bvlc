@@ -2,10 +2,15 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#include <stdio.h>
+#include <stdbool.h>
 #define NOB_STRIP_PREFIX
 #include "nob.h"
-
 #include <SDL.h>
+
+// ---------------------
+//  Dynamic Arrays
+// \/-------------------
 
 /* 
  EXAMPLE:
@@ -63,5 +68,22 @@ do {                                                                            
         printf(print_string, *it);                                                         \
     }                                                                                      \
 } while(0)
+
+// ---------------------
+//  Logging
+// \/-------------------
+
+void error(const char* msg);
+void warning(const char* msg);
+void todo(const char* msg);
+
+// ---------------------
+//  Asserts
+// \/-------------------
+
+void errorz(int val, const char* msg);
+void errornz(int val, const char* msg);
+void errorpz(void* val, const char* msg);
+void errorpnz(void* val, const char* msg);
 
 #endif //__UTILS_H__

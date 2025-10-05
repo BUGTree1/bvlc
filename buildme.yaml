@@ -12,10 +12,10 @@ compiler_flags         : []
 linker_flags           : []
 output_dir             : "bin"
 source_dir             : "src"
-libs                   : []
+libs                   : ["vlc"]
 pkgconf_libs           : ["SDL2"]
-lib_dirs               : []
-include_dirs           : []
+lib_dirs               : ["lib/vlcsdk/lib"]
+include_dirs           : ["lib/vlcsdk/include"]
 run_args               : []
 
 exec_postbuild         : []
