@@ -7,6 +7,31 @@
 #define NOB_STRIP_PREFIX
 #include "nob.h"
 #include <SDL.h>
+#include <SDL_syswm.h>
+
+// ---------------------
+//  Platforms
+// \/-------------------
+
+#if defined(_WIN32) || defined(_WIN64)
+#define UTILS_OS_WINDOWS 1
+#endif
+
+#if defined(__APPLE__) || defined(__MACH__)
+#define UTILS_OS_DARWIN 1
+#endif
+
+#if defined(__ANDROID__)
+#define UTILS_OS_ANDROID 1
+#endif
+
+#if defined(unix) || defined(__linux__) || defined(__unix__) || defined(linux) || defined(__FreeBSD__) || defined(__ANDROID__)
+#define UTILS_OS_POSIX 1
+#endif
+
+#if !defined(UTILS_OS_WINDOWS) && !defined(UTILS_OS_DARWIN) && !defined(UTILS_OS_POSIX) && !defined(UTILS_OS_ANDROID)
+#define UTILS_OS_OTHER 1
+#endif
 
 // ---------------------
 //  Dynamic Arrays

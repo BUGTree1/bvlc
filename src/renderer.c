@@ -34,7 +34,7 @@ renderer_data renderer_init() {
     data.width = 800;
     data.height = 600;
 
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_EVERYTHING);
     
     data.window = SDL_CreateWindow("BVLC", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, data.width, data.height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
@@ -49,7 +49,9 @@ void renderer_update(renderer_data data){
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 255);
     SDL_RenderClear(data.renderer);
     
-    
+    SDL_SetRenderDrawColor(data.renderer, 255, 255, 255, 255);
+    SDL_Rect rect = (SDL_Rect){0,0,100,20};
+    SDL_RenderDrawRect(data.renderer, &rect);
 
     SDL_RenderPresent(data.renderer);
 }

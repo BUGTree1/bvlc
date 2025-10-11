@@ -2,5 +2,6 @@ DONE:
 - rewrite in C and SDL2 like 1g engine (also nob)
 
 TODO:
-- render to texture and to sdl2 window
+- rewrite in SDL3
+- render to child window
 - GUI

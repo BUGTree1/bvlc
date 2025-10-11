@@ -3,25 +3,6 @@
 #include "player.h"
 #include "renderer.h"
 
-void* lock(void *opaque, void **planes) {
-    renderer_data data = *((renderer_data*)opaque);
-    *planes = data.video_pixels;
-    return NULL;
-}
-
-void unlock(void *opaque, void *picture, void *const *planes) {
-    // This function can be used for synchronization if needed
-}
-
-void display(void *opaque, void *picture) {
-    renderer_data data = *((renderer_data*)opaque);
-
-    SDL_UpdateTexture(data.video_texture, NULL, data.video_pixels, data.video_pitch);
-    SDL_RenderClear(data.renderer);
-    SDL_RenderCopy(data.renderer, data.video_texture, NULL, NULL);
-    SDL_RenderPresent(data.renderer);
-}
-
 int main(int argc, char** argv){
     // TODO: remove after release
     const char *video_path = "D:\\muzyka\\minimal\\Deep⧸Minimal Drum and Bass Mix #1-(720p30).mp4";
@@ -30,43 +11,41 @@ int main(int argc, char** argv){
         video_path = argv[1];
     }
 
-    Player_ctx ctx = player_init();
-    player_load(&ctx, video_path);
-
     renderer_data rend_data = renderer_init();
 
-    rend_data.video_pitch = rend_data.width * 4; // * 4 - RGB32 RV32
-    rend_data.video_texture = SDL_CreateTexture(rend_data.renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, rend_data.width, rend_data.height);
-    errorpz(rend_data.video_texture, "Cant create SDL texture!");
-
-    rend_data.video_pixels = malloc(rend_data.video_pitch * rend_data.height);
-
-    libvlc_video_set_callbacks(ctx.mp, lock, unlock, display, &rend_data);
-    libvlc_video_set_format(ctx.mp, "RV32", rend_data.width, rend_data.height, rend_data.video_pitch);
-
-    //TODO: Errors probably with RV32 "chroma" value format that is not supported with HW Accel
+    Player_ctx ctx = player_init(&rend_data);
+    player_load(&ctx, video_path);
 
     player_play(&ctx);
 
-    libvlc_state_t prev_state;
     double last_time = 0;
     double current_time = 0;
-    SDL_Event event;
-	int running = 1;
+	bool running = true;
     
     while (running) {
+        SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) running = 0;
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) running = 0;
-        }
-        
-        libvlc_state_t state = libvlc_media_get_state(libvlc_media_player_get_media(ctx.mp));
-        if(state != prev_state) {
-            printf("STATE: %d\n", state);
-        }
-        prev_state = state;
+            if (event.type != SDL_MOUSEMOTION) printf("event: %d\n", event.type);
+            if (event.type == SDL_QUIT) running = false;
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) running = false;
+            if (event.type == SDL_WINDOWEVENT) {
+                printf("WINDOW T: %d\n", event.window.event);
+                printf("WINDOW ID: %d\n", event.window.windowID);
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE) running = false;
+                if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                    rend_data.width  = event.window.data1;
+                    rend_data.height = event.window.data2;
 
-        SDL_GetWindowSizeInPixels(rend_data.window,&rend_data.width,&rend_data.height);
+                    ctx.video_width  = rend_data.width  / 2;
+                    ctx.video_height = rend_data.height / 2;
+
+                    SDL_SetWindowSize(ctx.video_window, ctx.video_width, ctx.video_height);
+                }
+                if (event.window.event == SDL_WINDOWEVENT_MOVED) {
+                    SDL_SetWindowPosition(ctx.video_window, event.window.data1, event.window.data2);
+                }
+            }
+        }
 
 		renderer_update(rend_data);
         
@@ -80,7 +59,6 @@ int main(int argc, char** argv){
 	renderer_end(rend_data);
 
     player_exit(&ctx);
-    free(rend_data.video_pixels);
 
     return 0;
 }

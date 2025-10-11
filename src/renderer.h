@@ -8,12 +8,6 @@ typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
 
-    SDL_Texture* video_texture;
-    int video_pitch;
-    uint8_t* video_pixels;
-    int video_width;
-    int video_height;
-
     int width;
     int height;
 
