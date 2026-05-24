@@ -1,10 +1,10 @@
 CC = g++
-CXXFLAGS = -Wall -Wextra
-LIBS = -lSDL3 -lavcodec
+CXXFLAGS = -O3 -Wall -Wextra
+LIBS = -lSDL3 -lavformat -lavcodec -lavutil -lavdevice -lswscale
 
 .PHONY: run
 run: ./bin/bvlc
-	./bin/bvlc
+	./bin/bvlc video.mp4 frame.png
 
 ./bin/bvlc: ./src/main.cpp
-	$(CC) $(CXXFLAGS) $(LIBS) -o $@ $<
+	$(CC) $(CXXFLAGS) -o $@ $< $(LIBS)
